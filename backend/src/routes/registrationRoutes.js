@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import rateLimit from 'express-rate-limit';
 import { authenticate } from '../middleware/auth.js';
 import { authorizeRoles } from '../middleware/roles.js';
 import { registrationRateLimiter } from '../middleware/rateLimiters.js';
@@ -7,7 +6,13 @@ import { registerForEvent, myRegistrations, participantsForEvent, checkInPartici
 
 const router = Router();
 
-router.post('/:id/register', authenticate, authorizeRoles('customer', 'organizer', 'admin'), registerForEvent);
+router.post(
+  '/:id/register',
+  registrationRateLimiter,
+  authenticate,
+  authorizeRoles('customer', 'organizer', 'admin'),
+  registerForEvent
+);
 router.get('/me', authenticate, myRegistrations);
 router.get('/:id/status', authenticate, checkRegistrationStatus);
 router.get('/:id/participants', authenticate, authorizeRoles('organizer', 'admin'), participantsForEvent);
