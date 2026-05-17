@@ -6,6 +6,7 @@ import {
   loginValidation,
   validate,
 } from '../middleware/validationMiddleware.js';
+import { authRateLimiter } from '../middleware/rateLimiters.js';
 
 const router = Router();
 router.post(
@@ -13,6 +14,7 @@ router.post(
   signupValidation,
   validate,
   signup
+);
 const parsedAuthWindowMs = Number.parseInt(
   process.env.AUTH_RATE_LIMIT_WINDOW_MS ?? '',
   10
